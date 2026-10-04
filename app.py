@@ -17,9 +17,15 @@ st.subheader('Summarize URL')
 
 
 ## Get the Groq API Key and url(YT or website)to be summarized
-## (pre-filled from `groq_api` in .env if present)
+## The app's own key (`groq_api` from .env, or from Streamlit secrets when deployed) stays on the
+## server and is never put into the text box, so visitors can't read it
+server_api_key=os.getenv("groq_api","")
 with st.sidebar:
-    groq_api_key=st.text_input("Groq API Key",value=os.getenv("groq_api",""),type="password")
+    user_api_key=st.text_input("Groq API Key",value="",type="password",
+                               help="Optional if the app has its own key configured" if server_api_key else None)
+    if server_api_key:
+        st.caption("Leave blank to use the app's key.")
+groq_api_key=user_api_key.strip() or server_api_key
 
 generic_url=st.text_input("URL",label_visibility="collapsed")
 

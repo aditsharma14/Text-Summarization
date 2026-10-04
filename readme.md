@@ -12,7 +12,7 @@ This project summarizes text with LangChain and LLMs hosted on [Groq](https://co
   - **stuff**: short content is sent to the model in a single request.
   - **map-reduce**: long content is split into chunks. Each chunk is summarized, then the chunk summaries are combined into one.
 - Handles Groq's free-tier rate limits by retrying automatically and trimming very long pages.
-- Reads the Groq API key from `.env`, or you can paste it into the sidebar.
+- Uses the app's own Groq API key from `.env` or Streamlit secrets, kept on the server so visitors can't see it. Visitors can also paste their own key into the sidebar.
 
 ## What the notebook covers
 
@@ -76,12 +76,26 @@ streamlit run app.py
 ```
 
 1. Open the URL Streamlit prints (usually http://localhost:8501).
-2. The Groq API key is filled in from `.env`. You can also paste one into the sidebar.
+2. If `.env` contains a key, leave the sidebar box blank. Otherwise, paste your key there.
 3. Paste a YouTube or website URL and click **Summarize the Content from YT or Website**.
 
 ### Notebook
 
-Open `code.ipynb` in Jupyter or VS Code, select the `venv` kernel, and run the cells from top to bottom.
+Install the Jupyter kernel first (`pip install ipykernel`). Then open `code.ipynb` in Jupyter or VS Code, select the `venv` kernel, and run the cells from top to bottom.
+
+## Deploying to Streamlit Community Cloud
+
+1. Push the repository to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io) and click **Create app**. Choose this repository, the `main` branch, and `app.py` as the main file.
+3. Under **Advanced settings**, choose Python 3.13 and paste this into **Secrets**:
+
+   ```toml
+   groq_api = "your_groq_api_key_here"
+   ```
+
+4. Click **Deploy**.
+
+The key stays on the server and is never shown in the app. If you leave the secret out, each visitor has to enter their own Groq key.
 
 ## Project structure
 
